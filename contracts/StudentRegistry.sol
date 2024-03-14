@@ -19,6 +19,7 @@ contract StudentRegistry {
     }
 
     mapping (address => Student) public students_mapping;
+    Student[] public listOfStudents;
 
     //  * @dev Set contract deployer as admin
     //  */
@@ -45,9 +46,23 @@ contract StudentRegistry {
        // map student struct as value to the passed-in address as key
        // this ensures that one can retrieve a student profile by passing in an address
        students_mapping[studentAddress] = student;
+
+       // add new student to the listOfStudents array of struct
+       listOfStudents.push(student);
     }
+
+    //  *
+    //  */
+    
+ /**
+  @dev return total number of added students
+  */
 
     function getStudentByAddress(address studentAddress) public view returns (Student memory) {
         return  students_mapping[studentAddress];
+    }
+
+    function getTotalNumberOfStudents() public view returns(uint256) {
+       return listOfStudents.length;
     }
 } 

@@ -62,7 +62,15 @@ contract StudentRegistry {
     function getStudentFromListOfStudentsArray(uint256 studentIndex) public view returns (Student memory) {
         return listOfStudents[studentIndex];
     }
+    function getAllStudents() public view returns (Student[] memory){
+    Student[] memory allStudents = new Student[](listOfStudents.length);
+    for (uint i = 0; i < allStudents.length; i++){
 
+        allStudents[i] = listOfStudents[i];
+    }
+
+    return  allStudents;
+}
 
 
 } 

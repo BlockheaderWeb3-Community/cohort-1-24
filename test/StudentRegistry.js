@@ -29,7 +29,7 @@ describe("StudentRegistry", function () {
 		expect(students).to.have.lengthOf(2);
 
 		expect(students[0][0]).to.equal(1); 
-		expect(students[0][1]).to.equal("Zinta");
+		expect(students[0][1]).to.equal("Zita");
 		expect(students[0][2]).to.equal(20); 
 		expect(students[0][3]).to.equal(true);
 		expect(students[0][4]).to.equal(true);

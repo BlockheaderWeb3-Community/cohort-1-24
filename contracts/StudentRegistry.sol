@@ -26,12 +26,19 @@ contract StudentRegistry {
     );
 
     mapping(address => Student) public studentsMapping;
+    mapping(uint256 => bool) public keyExists;
+
     Student[] public listOfStudents;
 
     //  * @dev Set contract deployer as admin
     //  */
     constructor() {
         admin = msg.sender; // 'msg.sender' is sender of current call, contract deployer for a constructor
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == admin, "caller not owner");
+        _;
     }
 
     function addStudent(
@@ -93,5 +100,77 @@ contract StudentRegistry {
         }
 
         return newListOfStudents;
+    }
+
+    // function studentExistInMapping(address studentAddress) public onlyOwner returns (bool) {
+
+    //   return   studentsMapping[studentAddress];
+    // }
+
+    function isStudentIdInList(uint8 _studentId)
+        private
+        view
+        onlyOwner
+        returns (bool)
+    {
+        for (uint256 i = 0; i < listOfStudents.length; i++) {
+            if (listOfStudents[i].studentId == _studentId) return true;
+        }
+
+        return false;
+    }
+
+    function isStudentInMapping(address _studentAddress)
+        public
+        view
+        onlyOwner
+        returns (bool)
+    {
+
+        if(studentsMapping[_studentAddress].studentId != 0){
+            return  true;
+        }
+
+        return false;
+    }
+
+    function studentNotFound() private pure returns (string memory) {
+        return "Student not found";
+    }
+
+    //Delete from array
+
+    function deleteStudentFromArray(uint8 studentId) public onlyOwner {
+        if (isStudentIdInList(studentId)) {
+            Student memory student = Student({
+                studentId: 0,
+                name: "",
+                age: 0,
+                isActive: false,
+                isPunctual: false
+            });
+            listOfStudents[studentId] = student;
+        } else {
+            studentNotFound();
+        }
+    }
+
+
+//Delete from mapping
+
+
+function deleteStudentFromMapping(address _studentAddress) public onlyOwner {
+        if (isStudentInMapping(_studentAddress)) {
+            Student memory student = Student({
+                studentId: 0,
+                name: "",
+                age: 0,
+                isActive: false,
+                isPunctual: false
+            });
+            studentsMapping[_studentAddress] = student;
+        } else {
+            studentNotFound();
+        }
     }
 }

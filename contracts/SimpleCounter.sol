@@ -9,13 +9,14 @@
 
 pragma solidity >=0.8.2 <0.9.0;
 import {Ownable} from "./Ownable.sol";
+import {SimpleCounterEvent} from "../events/SimpleCounterEvent.sol";
 
 /**
  * @title SimpleCounter
  * @dev Store & retrieve value in a variable
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
-contract SimpleCounter is Ownable {
+contract SimpleCounter is Ownable, SimpleCounterEvent {
     uint256 count;
 
     int256 underCount;
@@ -38,10 +39,12 @@ contract SimpleCounter is Ownable {
 
     function increaseCount() public onlyOwner {
         count += 1;
+        emit storeEvent(msg.sender, count);
     }
 
     function decreaseCount() public {
         count -= 1;
+        emit storeEvent(msg.sender, count);
     }
 
     function isCountEven() public view returns (bool) {
@@ -52,10 +55,12 @@ contract SimpleCounter is Ownable {
 
     function increaseUnderCount() public {
         underCount += 1;
+        emit underCountChanged(msg.sender, underCount);
     }
 
     function decreaseUnderCount() public {
         underCount -= 1;
+        emit underCountChanged(msg.sender, underCount);
     }
 
     function getUnderCount() public view returns (int256) {

@@ -1,30 +1,25 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.2 <0.9.0;
-import { SimpleCounter } from "./SimpleCounter.sol";
+import {Ownable} from "./Ownable.sol";
+import {SimpleCounter} from "./SimpleCounter.sol";
+import {StudentRegistry} from "./StudentRegistry.sol";
 
 /**
  * @title FactoryContract
- * @dev deploy other contracts 
+ * @dev deploy other contracts
  */
-contract FactoryContract {
+contract FactoryContract is Ownable {
     // reference SimpleCounter contract
     SimpleCounter public simpleCounter; // type visibility variable name
+    StudentRegistry public studentRegistry;
 
-    constructor () {
-        createSimpleCounterContract();
+    constructor() {
+        initializeContracts();
     }
 
-
-    function createSimpleCounterContract() public {
-        simpleCounter = new SimpleCounter(); // deploys simple counter
-    }
-
-    function callIncreaseCount() public {
-        simpleCounter.increaseCount();
-    }
-
-    function callRetrieve() public view returns(uint256) {
-        return simpleCounter.retrieve();
+    function initializeContracts() private onlyOwner {
+        simpleCounter = new SimpleCounter();
+        studentRegistry = new StudentRegistry();
     }
 }

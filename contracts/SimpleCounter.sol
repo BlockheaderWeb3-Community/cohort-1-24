@@ -30,7 +30,7 @@ contract SimpleCounter is Ownable {
      * @dev Store value in variable
      * @param num value to store
      */
-    function store(uint256 num) public {
+    function store(uint256 num) public onlyOwner {
         count = num;
     }
 
@@ -38,16 +38,16 @@ contract SimpleCounter is Ownable {
      * @dev Return value 
      * @return value of 'number'
      */
-    function retrieve() public view returns(uint256) {
+    function retrieve() public view onlyOwner returns(uint256) {
         return count;
     }
 
 
-    function increaseCount() public onlyOwner() {
+    function increaseCount() public onlyOwner {
         count += 1;
     }
 
-    function decreaseCount() public  {
+    function decreaseCount() public  onlyOwner {
         count -= 1;
     }
 
@@ -58,11 +58,11 @@ contract SimpleCounter is Ownable {
     }
 
 
-    function increaseUnderCount() public {
+    function increaseUnderCount() public onlyOwner {
        underCount += 1;
     }
-
-    function decreaseUnderCount() public {
+ 
+    function decreaseUnderCount() public onlyOwner {
        underCount -= 1;
     }
 
@@ -79,7 +79,5 @@ contract SimpleCounter is Ownable {
     function whoIsOwner() public view returns (address) {
             return getCurrentOwner();
     }
-
-
     
 }

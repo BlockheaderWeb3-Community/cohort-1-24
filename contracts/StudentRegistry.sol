@@ -1,70 +1,72 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity ^0.8.18;
 
 /**
  * @title StudentRegistry
- * @dev create students & retrieve already-created students
+ * @dev create students, retrieve & delete already created students
  */
 contract StudentRegistry {
-    address public admin;
-    uint256 studentCounter;
 
     struct Student {
-        uint256 studentId;
+        uint studentId;
         string name;
         uint8 age;
         bool isActive;
         bool isPunctual;
     }
 
-    mapping(address => Student) public studentsMapping;
-    mapping(address => mapping(uint => Student)) public studentsMap;
-    Student[] public listOfStudents;
-
-    //  * @dev Set contract deployer as admin
-    //  */
-    constructor() {
-        admin = msg.sender; // 'msg.sender' is sender of current call, contract deployer for a constructor
+    struct addressId {
+        address studentAddress;
+        uint studentId;
     }
 
-    // function addStudent(address studentAddress, uint8 _studentId, string memory _name, uint8 _age, bool _isActive, bool _isPunctual) external {
-    //     require(msg.sender == admin, 'only admin can add student');
-    // // validate inputs
-    //    require(_studentId != 0, 'please provide valid ID');
-    //    require(bytes(_name).length != 0, 'name length must be >= 3');
-    //    require(_age >= 18, 'you must not be underage');
-    //    Student memory student;
+    address admin;
 
-    //    // instantiate student struct
-    //    student.studentId = _studentId;
-    //    student.name = _name;
-    //    student.age = _age;
-    //    student.isActive = _isActive;
-    //    student.isPunctual = _isPunctual;
+    uint studentCounter;
 
-    //    // map student struct as value to the passed-in address as key
-    //    // this ensures that one can retrieve a student profile by passing in an address
-    //    studentsMapping[studentAddress] = student;
+    mapping(address => mapping(uint => Student)) public studentsRecords;
 
-    //    // add new student to the array of Student array of struct
-    //    listOfStudents.push(student);
-    // }
+    addressId[] addressIdPairs;
+
+	/**
+	 * @ dev Validator to check that valid students details are passed upon creation of student
+	 */
+    modifier isValidStudentDetails (string memory _name, uint _age) {
+        require(bytes(_name).length != 0, "name length must be >= 3");
+        require(_age >= 18, "You must not be underage");
+        _;
+    }
+
+	/**
+	 * @ dev Validator specify some admin previlleges
+	 */
+    modifier isAdmin() {
+        require(msg.sender == admin, "Only-Admin prevelleges");
+        _;
+    }
+
+    /**
+     * @dev Set contract deployer as admin
+     */
+    constructor() {
+        admin = msg.sender;
+    }
+
+	/**
+	 * @ dev Add an instance of student to the studentRegister
+	 * @ param: studentAddress, _name, _age, _isActive, _isPunctual
+	 */
     function addStudent(
         address studentAddress,
         string memory _name,
         uint8 _age,
         bool _isActive,
         bool _isPunctual
-    ) external {
-        require(msg.sender == admin, "only admin can add student");
-        // validate inputs
-        //    require(_studentId != 0, 'please provide valid ID');
-        require(bytes(_name).length != 0, "name length must be >= 3");
-        require(_age >= 18, "you must not be underage");
+    ) external isValidStudentDetails(_name, _age) isAdmin {
         Student memory student;
+        addressId memory addressIdPair;
 
-        // instantiate student struct
         studentCounter += 1;
         student.studentId = studentCounter;
         student.name = _name;
@@ -72,28 +74,75 @@ contract StudentRegistry {
         student.isActive = _isActive;
         student.isPunctual = _isPunctual;
 
-        // map student struct as value to the passed-in address as key
-        // this ensures that one can retrieve a student profile by passing in an address
-        studentsMap[studentAddress][studentCounter] = student;
-        //    studentsMapping[studentAddress] = student;
+        studentsRecords[studentAddress][student.studentId] = student;
 
-        // add new student to the array of Student array of struct
-        listOfStudents.push(student); // 10million
+        addressIdPair.studentAddress = studentAddress;
+        addressIdPair.studentId = student.studentId;
+
+        addressIdPairs.push(addressIdPair);
+
     }
 
-    function getStudentByAddress(
-        address studentAddress
-    ) public view returns (Student memory) {
-        return studentsMapping[studentAddress];
+	/**
+	 * @ dev Gets student address
+	 * @ param _id: the student id
+	 * Return: student address on Success. Otherwise address 0
+	 */
+
+    function getStudentAddress(uint _id) public view returns(address) {
+        for (uint i; i < addressIdPairs.length; i++){
+            if (addressIdPairs[i].studentId == _id){
+                return addressIdPairs[i].studentAddress;
+            }
+        }
+        return address(0);
+    } 
+
+	/**
+	 * @ dev Gets student id
+	 * @ param _address: the student's address
+	 * Return: student id on Success. Otherwise 0
+	 */
+
+    function getStudentId(address _address) public view returns(uint) {
+        for (uint i; i < addressIdPairs.length; i++){
+            if (addressIdPairs[i].studentAddress == _address){
+                return addressIdPairs[i].studentId;
+            }
+        }
+        return 0;
+    } 
+
+	/**
+	 * @ dev Computes total number of student
+	 * Return: number of student
+	 */
+
+    function getTotalStudents() public view returns(uint) {
+        return studentCounter;
     }
 
-    function getTotalNumberOfStudents() public view returns (uint256) {
-        return listOfStudents.length;
+	/**
+	 * @ dev Gets an instance of a student in the mapping
+	 * Param _address: student address, _id: student id
+	 * Return: An instance of a student. otherwise default value for each field
+	 */
+
+    function getStudent(address _address, uint _id) public view returns(Student memory) {
+        return studentsRecords[_address][_id];
     }
 
-    function getStudentFromListOfStudentsArray(
-        uint256 studentIndex
-    ) public view returns (Student memory) {
-        return listOfStudents[studentIndex];
+	/**
+	 * @ dev deletes an instance of a student in the mapping
+	 * Param _address: student address, _id: student id
+	 */
+
+    function deleteStudent(address _address, uint _id) public isAdmin {
+        Student storage studentToDelete = studentsRecords[_address][_id];
+
+        studentToDelete.name = "";
+        studentToDelete.age = 0;
+        studentToDelete.isActive = false;
+        studentToDelete.isPunctual = false;
     }
 }

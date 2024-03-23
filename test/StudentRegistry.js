@@ -36,10 +36,14 @@ describe("StudentRegistry", function () {
 
 
 
-	it("Should delete student by studentAddress and studentId ", async function () {
-		const students = await studentRegistry.deleteStudent("0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", 1);
-		expect(students.name).to.equal(undefined);
-		expect(students.age).to.equal(undefined);
+	it.only("Should delete student by studentAddress and studentId ", async function () {
+		const students = await studentRegistry.getStudentDetails("0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", 1);
+
+		console.log('deleted student____name before deletion', students);
+		const student = await studentRegistry.deleteStudent("0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", 1);
+		console.log('deleted student____name', student.name);
+		expect(student.name).to.equal(undefined);
+		expect(student.age).to.equal(undefined);
 	});
 
 

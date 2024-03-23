@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.2 <0.9.0;
 
-// Import interfaces
+// Imports
 import {ValidateStudent} from "./ValidateStudent.sol";
 import {Ownable} from "./Ownable.sol";
 import {StudentLogs} from "./StudentRegistryLogs.sol";
@@ -104,6 +104,7 @@ contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
     ) public onlyOwner notAddressZero(_studentAddress) {
         delete studentsMap[_studentAddress][_studentId];
         // Emit event for deleting a student
+        studentsCounter--;
         emit StudentDeleted(_studentAddress, _studentId);
     }
 }

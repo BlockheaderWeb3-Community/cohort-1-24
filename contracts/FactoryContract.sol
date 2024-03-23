@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.2 < 0.9.0;
 
-import {SimpleCounter} from "./simpleCounter/SimpleCounter.sol";
-import {StudentRegistry} from "./studentRegistry/StudentRegistry.sol";
+import {SimpleCounter} from "./SimpleCounter.sol";
+import {StudentRegistry} from "./StudentRegistry.sol";
 import {Ownable} from "./Ownable.sol";
 
 contract FactoryContract is Ownable {

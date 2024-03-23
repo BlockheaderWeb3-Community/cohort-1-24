@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.2 <0.9.0;
-import {Ownable} from "../Ownable.sol";
+import {Ownable} from "./Ownable.sol";
 import {SimpleCounterLogs} from "./SimpleCounterLogs.sol";
 
 /**

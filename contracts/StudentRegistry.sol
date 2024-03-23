@@ -3,8 +3,8 @@ pragma solidity >=0.8.2 <0.9.0;
 
 // Import interfaces
 import {ValidateStudent} from "./ValidateStudent.sol";
-import {Ownable} from "../Ownable.sol";
-import {StudentLogs} from "./StudentLogs.sol";
+import {Ownable} from "./Ownable.sol";
+import {StudentLogs} from "./StudentRegistryLogs.sol";
 
 contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
     uint256 public studentsCounter;

@@ -8,32 +8,42 @@ describe("StudentRegistry", function () {
 		studentRegistry = await StudentRegistry.deploy();
 		await studentRegistry.addStudent(
 			"0x5B38Da6a701c568545dCfcB03FcB875f56beddC4",
-			1,
-			"Zinta",
+			"Crypto",
 			20,
 			true,
 			true
 		);
 		await studentRegistry.addStudent(
 			"0x5B38Da6a701c568545dCfcB03FcB875f56beddC4",
-			2,
-			"Seun",
+			"Zombie",
 			24,
 			false,
 			true
 		);
 	});
 
-	it("Should return the list of students", async function () {
-		const students = await studentRegistry.getListOfStudents();
-		expect(students).to.have.lengthOf(2);
 
-		expect(students[0][0]).to.equal(1); 
-		expect(students[0][1]).to.equal("Zita");
-		expect(students[0][2]).to.equal(20); 
-		expect(students[0][3]).to.equal(true);
-		expect(students[0][4]).to.equal(true);
-
-		
+	it("Should retreive student by address and studentId ", async function () {
+		const students = await studentRegistry.getStudentDetails("0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", 1);
+		expect(students.name).to.equal("Crypto");
+		expect(students.age).to.equal(20);
 	});
+
+
+	it("Should retreive total number of students from student ", async function () {
+		const students = await studentRegistry.studentsCounter();
+		expect(students).to.equal(2); 
+		
+
+
+	});
+
+	it("Should retreive student by address and studentId ", async function () {
+		const students = await studentRegistry.getStudentDetails("0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", 1);
+		expect(students.name).to.equal("Crypto");
+		expect(students.age).to.equal(20);
+	});
+
+
+
 });

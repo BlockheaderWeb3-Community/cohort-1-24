@@ -48,12 +48,12 @@ contract SimpleCounter is Ownable, SimpleCounterLogs {
 
     function increaseUnderCount() public onlyOwner {
         underCount += 1;
-        emit valueAlteration(msg.sender, count);
+        emit underCountAlteration(msg.sender, underCount);
     }
 
     function decreaseUnderCount() public onlyOwner {
         underCount -= 1;
-        emit valueAlteration(msg.sender, count);
+        emit underCountAlteration(msg.sender, underCount);
     }
 
     function getUnderCount() public view returns (int256) {

@@ -1,27 +1,16 @@
-// trustless - no need for 3rd parties
-// decentralized
-// distributed
-// permissionless
-// secure
-// immutable
-
-
-
-
-
 
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.2 <0.9.0;
-import { Ownable } from "./Ownable.sol";
+import {Ownable} from "./Ownable.sol";
+import {SimpleCounterLogs} from "./SimpleCounterLogs.sol";
 
 /**
  * @title SimpleCounter
  * @dev Store & retrieve value in a variable
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
-contract SimpleCounter is Ownable {
-
+contract SimpleCounter is Ownable, SimpleCounterLogs {
     uint256 count;
 
     int256 underCount;
@@ -30,24 +19,24 @@ contract SimpleCounter is Ownable {
      * @dev Store value in variable
      * @param num value to store
      */
-    function store(uint256 num) public {
+    function store(uint256 num) public onlyOwner {
         count = num;
     }
 
     /**
-     * @dev Return value 
+     * @dev Return value
      * @return value of 'number'
      */
-    function retrieve() public view returns(uint256) {
+    function retrieve() public view returns (uint256) {
         return count;
     }
 
-
-    function increaseCount() public onlyOwner() {
+    function increaseCount() public onlyOwner {
         count += 1;
+        emit valueAlteration(msg.sender, count);
     }
 
-    function decreaseCount() public  {
+    function decreaseCount() public onlyOwner {
         count -= 1;
     }
 
@@ -57,29 +46,27 @@ contract SimpleCounter is Ownable {
         return false;
     }
 
-
-    function increaseUnderCount() public {
-       underCount += 1;
+    function increaseUnderCount() public onlyOwner {
+        underCount += 1;
+        emit underCountAlteration(msg.sender, underCount);
     }
 
-    function decreaseUnderCount() public {
-       underCount -= 1;
+    function decreaseUnderCount() public onlyOwner {
+        underCount -= 1;
+        emit underCountAlteration(msg.sender, underCount);
     }
 
-    function getUnderCount() public view returns (int256){
+    function getUnderCount() public view returns (int256) {
         return underCount;
     }
 
-    function isOwner() public view returns(bool) {
-       address currentOwner = getCurrentOwner();
-       if(currentOwner == owner) return true;
-       return false;
+    function isOwner() public view returns (bool) {
+        address currentOwner = getCurrentOwner();
+        if (currentOwner == owner) return true;
+        return false;
     }
 
     function whoIsOwner() public view returns (address) {
-            return getCurrentOwner();
+        return getCurrentOwner();
     }
-
-
-    
 }

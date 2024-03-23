@@ -28,4 +28,12 @@ contract Ownable {
     function changeOwner(address newOwner) public onlyOwner() notAddressZero(newOwner) {
         owner = newOwner;
     }
+
+
+    function getCurrentOwner() public  view  returns (address){
+        return  owner;
+    }
+
+
+
 }

@@ -10,6 +10,13 @@ contract Ownable {
 
     address owner;
 
+    event ChangedOwner(
+        string message,
+        address owner,
+        string anotherMessage,
+        address newOwner
+    );
+
     constructor() {
         require(msg.sender != address(0), 'deployer cannot be addr 0');
         owner = msg.sender;
@@ -27,5 +34,18 @@ contract Ownable {
 
     function changeOwner(address newOwner) public onlyOwner() notAddressZero(newOwner) {
         owner = newOwner;
+
+        emit ChangedOwner(
+            "Owner has been changed from:",
+            msg.sender,
+            "to:",
+            newOwner
+        );
     }
+
+    function getCurrentOwner() public view returns (address) {
+        return owner;
+    }
+
+
 }

@@ -6,10 +6,6 @@
 // immutable
 
 
-
-
-
-
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.2 <0.9.0;
@@ -26,12 +22,18 @@ contract SimpleCounter is Ownable {
 
     int256 underCount;
 
-    /**
-     * @dev Store value in variable
-     * @param num value to store
-     */
-    function store(uint256 num) public {
+    //all event declaration
+    event eventForStore(address caller, string message);
+    event decreaseCountEvent(address owner, string anodMessage);
+    event increaseCountEvent(address own, string anotherMessage);
+    event decreaseUnderCountEvent(address underCountOwn2, string underCountMesge);
+
+
+    function store(uint256 num) public onlyOwner() {
         count = num;
+
+        //emitting event for stored number
+         emit eventForStore(msg.sender, "number has been stored");
     }
 
     /**
@@ -45,10 +47,16 @@ contract SimpleCounter is Ownable {
 
     function increaseCount() public onlyOwner() {
         count += 1;
+
+        //emitting event for increase count
+        emit increaseCountEvent(msg.sender, "count is increased by 1");
     }
 
-    function decreaseCount() public  {
+    function decreaseCount() public onlyOwner() {
         count -= 1;
+
+        //emitting event for decrease count
+        emit decreaseCountEvent(msg.sender, "count is decreased by 1");
     }
 
     function isCountEven() public view returns (bool) {
@@ -57,13 +65,18 @@ contract SimpleCounter is Ownable {
         return false;
     }
 
-
-    function increaseUnderCount() public {
-       underCount += 1;
+    function increaseUnderCount() public onlyOwner() {
+        underCount += 1;
+        
+        // emitting increase underCount Event    
+        emit increaseCountEvent(msg.sender, "UnderCount is increased by 1");
     }
 
-    function decreaseUnderCount() public {
-       underCount -= 1;
+    function decreaseUnderCount() public onlyOwner() {
+        underCount -= 1;
+
+        // emiting decrease UnderCount Event
+        emit decreaseUnderCountEvent(msg.sender, "UnderCount is decreased by 1");
     }
 
     function getUnderCount() public view returns (int256){
@@ -79,7 +92,5 @@ contract SimpleCounter is Ownable {
     function whoIsOwner() public view returns (address) {
             return getCurrentOwner();
     }
-
-
     
 }

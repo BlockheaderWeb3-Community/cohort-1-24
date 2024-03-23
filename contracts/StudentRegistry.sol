@@ -92,6 +92,7 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
         uint256 _studentId
     ) public onlyOwner {
         delete studentsMap[_studentAddress][_studentId];
+        studentsCounter++;
 
         emit DeleteStudentEvent(_studentAddress, _studentId);
     }

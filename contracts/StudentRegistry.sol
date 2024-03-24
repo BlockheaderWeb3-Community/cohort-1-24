@@ -1,13 +1,9 @@
 // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.2;
 
-pragma solidity >=0.8.2 <0.9.0;
-
-// Import interfaces
-
-import {Ownable} from "./Ownable.sol";
+import "./Ownable.sol";
 
 contract StudentRegistry is Ownable {
-
     uint256 public studentsCounter;
 
     struct Student {
@@ -20,7 +16,7 @@ contract StudentRegistry is Ownable {
 
     mapping(address => mapping(uint256 => Student)) public studentsMap;
 
- event AddOrUpdateStudentEvent(
+    event AddOrUpdateStudentEvent(
         address studentAddress,
         uint256 studentId,
         string name,
@@ -37,7 +33,6 @@ contract StudentRegistry is Ownable {
         _;
     }
 
-    // Function to add a new student
     function addStudent(
         address studentAddress,
         string memory _name,
@@ -76,6 +71,8 @@ contract StudentRegistry is Ownable {
         bool _isActive,
         bool _isPunctual
     ) external isStudentDataValid(_name, _age) onlyOwner {
+        require(studentsMap[studentAddress][_studentId].studentId != 0, "Student does not exist");
+
         Student memory student = Student(
             _studentId,
             _name,
@@ -95,7 +92,6 @@ contract StudentRegistry is Ownable {
         );
     }
 
-    // Function to retrieve student details
     function getStudentDetails(
         address _studentAddress,
         uint256 _studentId
@@ -103,11 +99,12 @@ contract StudentRegistry is Ownable {
         return studentsMap[_studentAddress][_studentId];
     }
 
-    // Function to delete a student
     function deleteStudent(
         address _studentAddress,
         uint256 _studentId
     ) public onlyOwner {
+        require(studentsMap[_studentAddress][_studentId].studentId != 0, "Student does not exist");
+
         delete studentsMap[_studentAddress][_studentId];
 
         emit DeleteStudentEvent(_studentAddress, _studentId);

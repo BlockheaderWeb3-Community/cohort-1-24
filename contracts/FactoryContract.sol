@@ -34,4 +34,5 @@ contract FactoryContract is Ownable{
     function callRetrieve() public view returns(uint256){
         return simpleCounter.retrieve();
     } 
+
 }

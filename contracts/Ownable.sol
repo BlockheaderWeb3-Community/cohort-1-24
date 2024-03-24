@@ -28,7 +28,9 @@ contract Ownable {
     function changeOwner(address newOwner) public onlyOwner() notAddressZero(newOwner) {
         owner = newOwner;
     }
-    function getcurrentOwner() public view  returns(address) {
-        
-    };
+
+    function getCurrentOwner() public  view  returns (address){
+        return  owner;
+    }
+
 }

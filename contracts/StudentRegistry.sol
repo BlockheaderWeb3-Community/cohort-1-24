@@ -1,12 +1,18 @@
 // SPDX-License-Identifier: MIT
+pragma solidity >=0.8.2 <0.9.0;
 
-pragma solidity ^0.8.18;
+// Imports
+import {ValidateStudent} from "./ValidateStudent.sol";
+import {Ownable} from "./Ownable.sol";
+import {StudentLogs} from "./StudentRegistryLogs.sol";
 
 /**
  * @title StudentRegistry
  * @dev create students, retrieve & delete already created students
  */
-contract StudentRegistry {
+
+contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
+    uint256 public studentsCounter;
 
     struct Student {
         uint studentId;
@@ -16,133 +22,114 @@ contract StudentRegistry {
         bool isPunctual;
     }
 
-    struct addressId {
-        address studentAddress;
-        uint studentId;
-    }
+    mapping(address => mapping(uint256 => Student)) public studentsMap;
 
-    address admin;
-
-    uint studentCounter;
-
-    mapping(address => mapping(uint => Student)) public studentsRecords;
-
-    addressId[] addressIdPairs;
+	addressId[] addressIdPairs;
 
 	/**
-	 * @ dev Validator to check that valid students details are passed upon creation of student
-	 */
-    modifier isValidStudentDetails (string memory _name, uint _age) {
-        require(bytes(_name).length != 0, "name length must be >= 3");
-        require(_age >= 18, "You must not be underage");
-        _;
-    }
-
-	/**
-	 * @ dev Validator specify some admin previlleges
-	 */
-    modifier isAdmin() {
-        require(msg.sender == admin, "Only-Admin prevelleges");
-        _;
-    }
-
-    /**
      * @dev Set contract deployer as admin
      */
-    constructor() {
-        admin = msg.sender;
-    }
+	constructor() {
+		address admin = msg.sender;
+	}
 
 	/**
-	 * @ dev Add an instance of student to the studentRegister
-	 * @ param: studentAddress, _name, _age, _isActive, _isPunctual
+	 * @dev Add an instance of student to the studentRegister
+	 * param: studentAddress, _name, _age, _isActive, _isPunctual
 	 */
     function addStudent(
-        address studentAddress,
+        address _studentAddress,
         string memory _name,
         uint8 _age,
         bool _isActive,
         bool _isPunctual
-    ) external isValidStudentDetails(_name, _age) isAdmin {
-        Student memory student;
-        addressId memory addressIdPair;
+    )
+        external
+        isStudentDataValid(_name, _age)
+        onlyOwner
+        notAddressZero(_studentAddress)
+    {
+        studentsCounter++;
+        uint256 studentId = studentsCounter;
+		addressId memory addressIdPair;
 
-        studentCounter += 1;
-        student.studentId = studentCounter;
-        student.name = _name;
-        student.age = _age;
-        student.isActive = _isActive;
-        student.isPunctual = _isPunctual;
+        Student memory student = Student(
+            studentId,
+            _name,
+            _age,
+            _isActive,
+            _isPunctual
+        );
+        studentsMap[_studentAddress][studentId] = student;
 
-        studentsRecords[studentAddress][student.studentId] = student;
+		addressIdPair.studentAddress = _studentAddress;
+		addressIdPair.studentId = studentId;
+		addressIdPairs.push(addressIdPair);
 
-        addressIdPair.studentAddress = studentAddress;
-        addressIdPair.studentId = student.studentId;
-
-        addressIdPairs.push(addressIdPair);
-
+        // Emit event for adding a student
+        emit StudentAction(
+            _studentAddress,
+            studentId,
+            _name,
+            _age,
+            _isActive,
+            _isPunctual
+        );
     }
 
-	/**
-	 * @ dev Gets student address
-	 * @ param _id: the student id
-	 * Return: student address on Success. Otherwise address 0
-	 */
+    // Function to update an existing student
+    function updateStudent(
+        address _studentAddress,
+        uint256 _studentId,
+        string memory _name,
+        uint8 _age,
+        bool _isActive,
+        bool _isPunctual
+    )
+        external
+        isStudentDataValid(_name, _age)
+        onlyOwner
+        notAddressZero(_studentAddress)
+    {
+        Student memory student = Student(
+            _studentId,
+            _name,
+            _age,
+            _isActive,
+            _isPunctual
+        );
+        studentsMap[_studentAddress][_studentId] = student;
 
-    function getStudentAddress(uint _id) public view returns(address) {
-        for (uint i; i < addressIdPairs.length; i++){
-            if (addressIdPairs[i].studentId == _id){
-                return addressIdPairs[i].studentAddress;
-            }
-        }
-        return address(0);
-    } 
-
-	/**
-	 * @ dev Gets student id
-	 * @ param _address: the student's address
-	 * Return: student id on Success. Otherwise 0
-	 */
-
-    function getStudentId(address _address) public view returns(uint) {
-        for (uint i; i < addressIdPairs.length; i++){
-            if (addressIdPairs[i].studentAddress == _address){
-                return addressIdPairs[i].studentId;
-            }
-        }
-        return 0;
-    } 
-
-	/**
-	 * @ dev Computes total number of student
-	 * Return: number of student
-	 */
-
-    function getTotalStudents() public view returns(uint) {
-        return studentCounter;
+        // Emit event for updating a student
+        emit StudentAction(
+            _studentAddress,
+            _studentId,
+            _name,
+            _age,
+            _isActive,
+            _isPunctual
+        );
     }
 
-	/**
-	 * @ dev Gets an instance of a student in the mapping
-	 * Param _address: student address, _id: student id
-	 * Return: An instance of a student. otherwise default value for each field
-	 */
-
-    function getStudent(address _address, uint _id) public view returns(Student memory) {
-        return studentsRecords[_address][_id];
+    // Function to retrieve student details by address and ID
+    function getStudentDetails(
+        address _studentAddress,
+        uint256 _studentId
+    ) public view notAddressZero(_studentAddress) returns (Student memory) {
+        return studentsMap[_studentAddress][_studentId];
     }
 
-	/**
-	 * @ dev deletes an instance of a student in the mapping
-	 * Param _address: student address, _id: student id
-	 */
+    // Function to delete a student
+    function deleteStudent(
+        address _studentAddress,
+        uint256 _studentId
+    ) public onlyOwner notAddressZero(_studentAddress) validateArrayLength {
+        delete studentsMap[_studentAddress][_studentId];
+        // Emit event for deleting a student
+        studentsCounter--;
+		
+		delete addressIdPairs[(_studentId - 1)];
 
-    function deleteStudent(address _address, uint _id) public isAdmin {
-        Student storage studentToDelete = studentsRecords[_address][_id];
-
-        studentToDelete.name = "";
-        studentToDelete.age = 0;
-        studentToDelete.isActive = false;
-        studentToDelete.isPunctual = false;
+        emit StudentDeleted(_studentAddress, _studentId);
     }
 }

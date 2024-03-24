@@ -1,27 +1,16 @@
-// trustless - no need for 3rd parties
-// decentralized
-// distributed
-// permissionless
-// secure
-// immutable
-
-
-
-
-
 
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.2 <0.9.0;
-import { Ownable } from "./Ownable.sol";
+import {Ownable} from "./Ownable.sol";
+import {SimpleCounterLogs} from "./SimpleCounterLogs.sol";
 
 /**
  * @title SimpleCounter
  * @dev Store & retrieve value in a variable
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
-contract SimpleCounter is Ownable {
-
+contract SimpleCounter is Ownable, SimpleCounterLogs {
     uint256 count;
 
     int256 underCount;
@@ -35,19 +24,31 @@ contract SimpleCounter is Ownable {
     }
 
     /**
-     * @dev Return value 
+     * @dev Return value
      * @return value of 'number'
      */
+<<<<<<< HEAD
     function retrieve() public view onlyOwner returns(uint256) {
         return count;
     }
 
 
-    function increaseCount() public onlyOwner {
-        count += 1;
+=======
+    function retrieve() public view returns (uint256) {
+        return count;
     }
 
+>>>>>>> 2618822497e7d49990c48a62fe54ee9942370651
+    function increaseCount() public onlyOwner {
+        count += 1;
+        emit valueAlteration(msg.sender, count);
+    }
+
+<<<<<<< HEAD
     function decreaseCount() public  onlyOwner {
+=======
+    function decreaseCount() public onlyOwner {
+>>>>>>> 2618822497e7d49990c48a62fe54ee9942370651
         count -= 1;
     }
 
@@ -57,6 +58,7 @@ contract SimpleCounter is Ownable {
         return false;
     }
 
+<<<<<<< HEAD
 
     function increaseUnderCount() public onlyOwner {
        underCount += 1;
@@ -64,20 +66,34 @@ contract SimpleCounter is Ownable {
  
     function decreaseUnderCount() public onlyOwner {
        underCount -= 1;
+=======
+    function increaseUnderCount() public onlyOwner {
+        underCount += 1;
+        emit underCountAlteration(msg.sender, underCount);
     }
 
-    function getUnderCount() public view returns (int256){
+    function decreaseUnderCount() public onlyOwner {
+        underCount -= 1;
+        emit underCountAlteration(msg.sender, underCount);
+>>>>>>> 2618822497e7d49990c48a62fe54ee9942370651
+    }
+
+    function getUnderCount() public view returns (int256) {
         return underCount;
     }
 
-    function isOwner() public view returns(bool) {
-       address currentOwner = getCurrentOwner();
-       if(currentOwner == owner) return true;
-       return false;
+    function isOwner() public view returns (bool) {
+        address currentOwner = getCurrentOwner();
+        if (currentOwner == owner) return true;
+        return false;
     }
 
     function whoIsOwner() public view returns (address) {
-            return getCurrentOwner();
+        return getCurrentOwner();
     }
+<<<<<<< HEAD
     
 }
+=======
+}
+>>>>>>> 2618822497e7d49990c48a62fe54ee9942370651

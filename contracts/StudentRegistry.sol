@@ -3,11 +3,11 @@
 pragma solidity >=0.8.2 <0.9.0;
 
 // Import interfaces
-import {ValidateStudent} from "../validators/ValidateStudent.sol";
-import {Ownable} from "./Ownable.sol";
-import {StudentEvents} from "../events/StudentEvents.sol";
 
-contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
+import {Ownable} from "./Ownable.sol";
+
+contract StudentRegistry is Ownable {
+
     uint256 public studentsCounter;
 
     struct Student {
@@ -19,6 +19,23 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
     }
 
     mapping(address => mapping(uint256 => Student)) public studentsMap;
+
+ event AddOrUpdateStudentEvent(
+        address studentAddress,
+        uint256 studentId,
+        string name,
+        uint8 age,
+        bool isActive,
+        bool isPunctual
+    );
+
+    event DeleteStudentEvent(address studentAddress, uint256 studentId);
+
+    modifier isStudentDataValid(string memory _name, uint8 _age) {
+        require(bytes(_name).length > 0, "Name cannot be empty");
+        require(_age > 0, "Age must be greater than zero");
+        _;
+    }
 
     // Function to add a new student
     function addStudent(

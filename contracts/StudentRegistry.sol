@@ -6,11 +6,16 @@ import {ValidateStudent} from "./ValidateStudent.sol";
 import {Ownable} from "./Ownable.sol";
 import {StudentLogs} from "./StudentRegistryLogs.sol";
 
+/**
+ * @title StudentRegistry
+ * @dev create students, retrieve & delete already created students
+ */
+
 contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
     uint256 public studentsCounter;
 
     struct Student {
-        uint256 studentId;
+        uint studentId;
         string name;
         uint8 age;
         bool isActive;
@@ -19,7 +24,12 @@ contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
 
     mapping(address => mapping(uint256 => Student)) public studentsMap;
 
-    // Function to add a new student
+	addressId[] addressIdPairs;
+
+	/**
+	 * @dev Add an instance of student to the studentRegister
+	 * param: studentAddress, _name, _age, _isActive, _isPunctual
+	 */
     function addStudent(
         address _studentAddress,
         string memory _name,
@@ -34,6 +44,7 @@ contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
     {
         studentsCounter++;
         uint256 studentId = studentsCounter;
+		addressId memory addressIdPair;
 
         Student memory student = Student(
             studentId,
@@ -43,6 +54,10 @@ contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
             _isPunctual
         );
         studentsMap[_studentAddress][studentId] = student;
+
+		addressIdPair.studentAddress = _studentAddress;
+		addressIdPair.studentId = studentId;
+		addressIdPairs.push(addressIdPair);
 
         // Emit event for adding a student
         emit StudentAction(
@@ -101,10 +116,44 @@ contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
     function deleteStudent(
         address _studentAddress,
         uint256 _studentId
-    ) public onlyOwner notAddressZero(_studentAddress) {
+    ) public onlyOwner notAddressZero(_studentAddress) 
+		validateArrayLength(addressIdPairs, _studentId) {
         delete studentsMap[_studentAddress][_studentId];
         // Emit event for deleting a student
         studentsCounter--;
+		
+		delete addressIdPairs[(_studentId - 1)];
+
         emit StudentDeleted(_studentAddress, _studentId);
+    }
+
+	/**
+	 * @dev Gets student address
+	 * param _id: the student id
+	 * Return: student address on Success. Otherwise address 0
+	 */
+
+    function getStudentAddress(uint _id) public view returns(address) {
+        for (uint i; i < addressIdPairs.length; i++){
+            if (addressIdPairs[i].studentId == _id){
+                return addressIdPairs[i].studentAddress;
+            }
+        }
+        return address(0);
+    } 
+
+	/**
+	 * @dev Gets student id
+	 * param _address: the student's address
+	 * Return: student id on Success. Otherwise 0
+	 */
+
+    function getStudentId(address _address) public view returns(uint) {
+        for (uint i; i < addressIdPairs.length; i++){
+            if (addressIdPairs[i].studentAddress == _address){
+                return addressIdPairs[i].studentId;
+            }
+        }
+        return 0;
     }
 }

@@ -2,12 +2,12 @@
 
 pragma solidity >=0.8.2 <0.9.0;
 
-// Import interfaces
-import {ValidateStudent} from "../validators/ValidateStudent.sol";
+// Imports
+import {ValidateStudent} from "./ValidateStudent.sol";
 import {Ownable} from "./Ownable.sol";
-import {StudentEvents} from "../events/StudentEvents.sol";
+import {StudentLogs} from "./StudentRegistryLogs.sol";
 
-contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
+contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
     uint256 public studentsCounter;
 
     struct Student {
@@ -22,14 +22,18 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
 
     // Function to add a new student
     function addStudent(
-        address studentAddress,
+        address _studentAddress
         string memory _name,
         uint8 _age,
         bool _isActive,
         bool _isPunctual
-    ) external isStudentDataValid(_name, _age) onlyOwner {
+    )
+        external
+        isStudentDataValid(_name, _age)
+        onlyOwner
+        notAddressZero(_studentAddress)
+    {
         studentsCounter++;
-
         uint256 studentId = studentsCounter;
 
         Student memory student = Student(
@@ -39,10 +43,11 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
             _isActive,
             _isPunctual
         );
-        studentsMap[studentAddress][studentId] = student;
+        studentsMap[_studentAddress][studentId] = student;
 
-        emit AddOrUpdateStudentEvent(
-            studentAddress,
+        // Emit event for adding a student
+        emit StudentAction(
+            _studentAddress,
             studentId,
             _name,
             _age,
@@ -51,14 +56,20 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
         );
     }
 
+    // Function to update an existing student
     function updateStudent(
-        address studentAddress,
+        address _studentAddress,
         uint256 _studentId,
         string memory _name,
         uint8 _age,
         bool _isActive,
         bool _isPunctual
-    ) external isStudentDataValid(_name, _age) onlyOwner {
+    )
+        external
+        isStudentDataValid(_name, _age)
+        onlyOwner
+        notAddressZero(_studentAddress)
+    {
         Student memory student = Student(
             _studentId,
             _name,
@@ -66,10 +77,11 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
             _isActive,
             _isPunctual
         );
-        studentsMap[studentAddress][_studentId] = student;
+        studentsMap[_studentAddress][_studentId] = student;
 
-        emit AddOrUpdateStudentEvent(
-            studentAddress,
+        // Emit event for updating a student
+        emit StudentAction(
+            _studentAddress,
             _studentId,
             _name,
             _age,
@@ -78,11 +90,11 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
         );
     }
 
-    // Function to retrieve student details
+    // Function to retrieve student details by address and ID
     function getStudentDetails(
         address _studentAddress,
         uint256 _studentId
-    ) public view returns (Student memory) {
+    ) public view notAddressZero(_studentAddress) returns (Student memory) {
         return studentsMap[_studentAddress][_studentId];
     }
 
@@ -90,10 +102,10 @@ contract StudentRegistry is Ownable, ValidateStudent, StudentEvents {
     function deleteStudent(
         address _studentAddress,
         uint256 _studentId
-    ) public onlyOwner {
+    ) public onlyOwner notAddressZero(_studentAddress) {
         delete studentsMap[_studentAddress][_studentId];
-        studentsCounter++;
-
-        emit DeleteStudentEvent(_studentAddress, _studentId);
+        // Emit event for deleting a student
+        studentsCounter--;
+        emit StudentDeleted(_studentAddress, _studentId);
     }
 }

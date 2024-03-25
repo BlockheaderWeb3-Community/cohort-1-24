@@ -5,18 +5,20 @@
 // secure
 // immutable
 
+
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.2 <0.9.0;
 import {Ownable} from "./Ownable.sol";
-import {SimpleCounterEvent} from "../events/SimpleCounterEvent.sol";
+import {SimpleCounterLogs} from "./SimpleCounterLogs.sol";
 
 /**
  * @title SimpleCounter
  * @dev Store & retrieve value in a variable
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
-contract SimpleCounter is Ownable, SimpleCounterEvent {
+
+contract SimpleCounter is Ownable, SimpleCounterLogs {
     uint256 count;
 
     int256 underCount;
@@ -25,7 +27,7 @@ contract SimpleCounter is Ownable, SimpleCounterEvent {
      * @dev Store value in variable
      * @param num value to store
      */
-    function store(uint256 num) public {
+    function store(uint256 num) public onlyOwner {
         count = num;
     }
 
@@ -39,10 +41,11 @@ contract SimpleCounter is Ownable, SimpleCounterEvent {
 
     function increaseCount() public onlyOwner {
         count += 1;
-        emit storeEvent(msg.sender, count);
+
+        emit valueAlteration(msg.sender, count);
     }
 
-    function decreaseCount() public {
+    function decreaseCount() public onlyOwner {
         count -= 1;
         emit storeEvent(msg.sender, count);
     }
@@ -52,15 +55,14 @@ contract SimpleCounter is Ownable, SimpleCounterEvent {
         if (currentCount % 2 == 0) return true;
         return false;
     }
-
-    function increaseUnderCount() public {
+    function increaseUnderCount() public onlyOwner {
         underCount += 1;
-        emit underCountChanged(msg.sender, underCount);
+        emit underCountAlteration(msg.sender, underCount);
     }
 
-    function decreaseUnderCount() public {
+    function decreaseUnderCount() public onlyOwner {
         underCount -= 1;
-        emit underCountChanged(msg.sender, underCount);
+        emit underCountAlteration(msg.sender, underCount);
     }
 
     function getUnderCount() public view returns (int256) {

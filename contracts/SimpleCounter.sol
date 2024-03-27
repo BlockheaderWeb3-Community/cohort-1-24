@@ -5,7 +5,6 @@
 // secure
 // immutable
 
-
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.2 <0.9.0;
@@ -47,7 +46,7 @@ contract SimpleCounter is Ownable, SimpleCounterLogs {
 
     function decreaseCount() public onlyOwner {
         count -= 1;
-        emit storeEvent(msg.sender, count);
+        emit valueAlteration(msg.sender, count);
     }
 
     function isCountEven() public view returns (bool) {
@@ -55,6 +54,7 @@ contract SimpleCounter is Ownable, SimpleCounterLogs {
         if (currentCount % 2 == 0) return true;
         return false;
     }
+
     function increaseUnderCount() public onlyOwner {
         underCount += 1;
         emit underCountAlteration(msg.sender, underCount);

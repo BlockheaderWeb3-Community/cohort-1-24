@@ -22,7 +22,7 @@ contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
 
     // Function to add a new student
     function addStudent(
-        address _studentAddress
+        address _studentAddress,
         string memory _name,
         uint8 _age,
         bool _isActive,

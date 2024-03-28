@@ -12,30 +12,11 @@ contract ETHBankContract {
     address owner;
     mapping(address => uint256) public ethBalances;
 
-    event Deposit(
-        address _address,
-        uint256 _amount,
-        uint256 _prevBalance,
-        uint256 _currentBalance
-    );
-    event Withdraw(
-        address _address,
-        uint256 _amount,
-        uint256 _prevBalance,
-        uint256 _currentBalance
-    );
-    event WithdrawAll(
-        address _address,
-        uint256 _amount,
-        uint256 _prevBalance,
-        uint256 _currentBalance
-    );
-    event EmergencyWithdraw(
-        address _address,
-        uint256 _amount,
-        uint256 _prevBalance,
-        uint256 _currentBalance
-    );
+    event Deposit(address _address, uint256 _amount, uint256 _prevBalance, uint256 _currentBalance);
+    event Withdraw(address _address, uint256 _amount, uint256 _prevBalance, uint256 _currentBalance);
+    event WithdrawAll(address _address, uint256 _amount, uint256 _prevBalance, uint256 _currentBalance);
+    event EmergencyWithdraw(address _address, uint256 _amount, uint256 _prevBalance, uint256 _currentBalance);
+
 
     constructor() {
         owner = msg.sender;
@@ -49,12 +30,7 @@ contract ETHBankContract {
         (bool success, ) = address(this).call{value: ethAmount}("");
         console.log("txn success here:____", success);
         require(success, "failed to deposit ETH");
-        emit Deposit(
-            msg.sender,
-            ethAmount,
-            balanceBefore,
-            ethBalances[msg.sender]
-        );
+        emit Deposit(msg.sender, ethAmount, balanceBefore, ethBalances[msg.sender]);
     }
 
     /**
@@ -67,12 +43,7 @@ contract ETHBankContract {
         ethBalances[msg.sender] -= amount;
         (bool success, ) = msg.sender.call{value: amount}("");
         require(success, "failed to withdraw ETH");
-        emit Withdraw(
-            msg.sender,
-            amount,
-            balanceBefore,
-            ethBalances[msg.sender]
-        );
+        emit Withdraw(msg.sender, amount, balanceBefore, ethBalances[msg.sender]);
     }
 
     function withdrawAllETH() public {
@@ -82,12 +53,7 @@ contract ETHBankContract {
         ethBalances[msg.sender] = 0;
         (bool success, ) = msg.sender.call{value: amountToWithdraw}("");
         require(success, "failed to withdraw all ETH");
-        emit WithdrawAll(
-            msg.sender,
-            amountToWithdraw,
-            balanceBefore,
-            ethBalances[msg.sender]
-        );
+        emit WithdrawAll(msg.sender, amountToWithdraw, balanceBefore, ethBalances[msg.sender]);
     }
 
     function getContractEthBalance() public view returns (uint256) {
@@ -101,12 +67,7 @@ contract ETHBankContract {
         ethBalances[owner] = contractBalance;
         (bool success, ) = owner.call{value: contractBalance}("");
         require(success, "failed to withdraw all ETH to owner");
-        emit EmergencyWithdraw(
-            owner,
-            contractBalance,
-            balanceBefore,
-            ethBalances[owner]
-        );
+        emit EmergencyWithdraw(owner, contractBalance, balanceBefore, ethBalances[owner]);
     }
 
     receive() external payable {

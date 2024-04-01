@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
 
-import "./Ownable.sol";
+pragma solidity >=0.8.2 <0.9.0;
 
-contract StudentRegistry is Ownable {
+// Imports
+import {ValidateStudent} from "./ValidateStudent.sol";
+import {Ownable} from "./Ownable.sol";
+import {StudentLogs} from "./StudentRegistryLogs.sol";
+
+contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
     uint256 public studentsCounter;
 
     struct Student {
@@ -16,32 +20,20 @@ contract StudentRegistry is Ownable {
 
     mapping(address => mapping(uint256 => Student)) public studentsMap;
 
-    event AddOrUpdateStudentEvent(
-        address studentAddress,
-        uint256 studentId,
-        string name,
-        uint8 age,
-        bool isActive,
-        bool isPunctual
-    );
-
-    event DeleteStudentEvent(address studentAddress, uint256 studentId);
-
-    modifier isStudentDataValid(string memory _name, uint8 _age) {
-        require(bytes(_name).length > 0, "Name cannot be empty");
-        require(_age > 0, "Age must be greater than zero");
-        _;
-    }
-
+    // Function to add a new student
     function addStudent(
-        address studentAddress,
+        address _studentAddress,
         string memory _name,
         uint8 _age,
         bool _isActive,
         bool _isPunctual
-    ) external isStudentDataValid(_name, _age) onlyOwner {
+    )
+        external
+        isStudentDataValid(_name, _age)
+        onlyOwner
+        notAddressZero(_studentAddress)
+    {
         studentsCounter++;
-
         uint256 studentId = studentsCounter;
 
         Student memory student = Student(
@@ -51,10 +43,11 @@ contract StudentRegistry is Ownable {
             _isActive,
             _isPunctual
         );
-        studentsMap[studentAddress][studentId] = student;
+        studentsMap[_studentAddress][studentId] = student;
 
-        emit AddOrUpdateStudentEvent(
-            studentAddress,
+        // Emit event for adding a student
+        emit StudentAction(
+            _studentAddress,
             studentId,
             _name,
             _age,
@@ -63,16 +56,20 @@ contract StudentRegistry is Ownable {
         );
     }
 
+    // Function to update an existing student
     function updateStudent(
-        address studentAddress,
+        address _studentAddress,
         uint256 _studentId,
         string memory _name,
         uint8 _age,
         bool _isActive,
         bool _isPunctual
-    ) external isStudentDataValid(_name, _age) onlyOwner {
-        require(studentsMap[studentAddress][_studentId].studentId != 0, "Student does not exist");
-
+    )
+        external
+        isStudentDataValid(_name, _age)
+        onlyOwner
+        notAddressZero(_studentAddress)
+    {
         Student memory student = Student(
             _studentId,
             _name,
@@ -80,10 +77,11 @@ contract StudentRegistry is Ownable {
             _isActive,
             _isPunctual
         );
-        studentsMap[studentAddress][_studentId] = student;
+        studentsMap[_studentAddress][_studentId] = student;
 
-        emit AddOrUpdateStudentEvent(
-            studentAddress,
+        // Emit event for updating a student
+        emit StudentAction(
+            _studentAddress,
             _studentId,
             _name,
             _age,
@@ -92,21 +90,22 @@ contract StudentRegistry is Ownable {
         );
     }
 
+    // Function to retrieve student details by address and ID
     function getStudentDetails(
         address _studentAddress,
         uint256 _studentId
-    ) public view returns (Student memory) {
+    ) public view notAddressZero(_studentAddress) returns (Student memory) {
         return studentsMap[_studentAddress][_studentId];
     }
 
+    // Function to delete a student
     function deleteStudent(
         address _studentAddress,
         uint256 _studentId
-    ) public onlyOwner {
-        require(studentsMap[_studentAddress][_studentId].studentId != 0, "Student does not exist");
-
+    ) public onlyOwner notAddressZero(_studentAddress) {
         delete studentsMap[_studentAddress][_studentId];
-
-        emit DeleteStudentEvent(_studentAddress, _studentId);
+        // Emit event for deleting a student
+        studentsCounter--;
+        emit StudentDeleted(_studentAddress, _studentId);
     }
 }

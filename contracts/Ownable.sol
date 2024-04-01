@@ -34,4 +34,3 @@ contract Ownable {
         return  owner;
     }
 }
-

@@ -1,3 +1,9 @@
+// trustless - no need for 3rd parties
+// decentralized
+// distributed
+// permissionless
+// secure
+// immutable
 
 // SPDX-License-Identifier: MIT
 
@@ -10,6 +16,7 @@ import {SimpleCounterLogs} from "./SimpleCounterLogs.sol";
  * @dev Store & retrieve value in a variable
  * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
  */
+
 contract SimpleCounter is Ownable, SimpleCounterLogs {
     uint256 count;
 
@@ -33,11 +40,13 @@ contract SimpleCounter is Ownable, SimpleCounterLogs {
 
     function increaseCount() public onlyOwner {
         count += 1;
+
         emit valueAlteration(msg.sender, count);
     }
 
     function decreaseCount() public onlyOwner {
         count -= 1;
+        emit valueAlteration(msg.sender, count);
     }
 
     function isCountEven() public view returns (bool) {

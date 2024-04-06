@@ -17,9 +17,5 @@ contract FactoryContract is Ownable {
     function creatInstance() private  onlyOwner {
         simpleCounter = new SimpleCounter();
         studentRegistry = new StudentRegistry();
-
-    
     }
-
-
 }

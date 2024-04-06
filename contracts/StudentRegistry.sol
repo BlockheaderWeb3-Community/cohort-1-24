@@ -17,6 +17,8 @@ contract StudentRegistry is ValidateStudent, Ownable, StudentLogs {
         bool isPunctual;
     }
 
+
+
     mapping(address => mapping(uint256 => Student)) public studentsMap;
 
     // Function to add a new student

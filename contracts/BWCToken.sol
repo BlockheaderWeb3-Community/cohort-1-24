@@ -13,15 +13,21 @@ contract BWCContract{
     //this mapping is used to track the allowance given to any account to spend from another account 
     mapping(address => mapping (address => uint256)) private _allowance;
 
+    //this mapping allows the spender we pass in to spend all or transfer all the balance
+    mapping(address => mapping (address => bool)) private _spendAll;
+
+
+    //all event declarations
     event transferEvt(address caller, address to, uint256 amount);
     event mintEvt(address caller, address to, uint256 amount);
     event approveEvt(address caller, address spender, uint256 currentValue, uint256 value);
     event transferFromEvt(address caller, address from, address to, uint256 value);
+    event approveAllEvt(address caller, address sender, bool canTransfer);
 
-
+    //custom error declaration
     error InsufficientBalance(uint256 available, uint256 required);
     error InvalidAddress(string);
-    error  valueTooSmall(string);
+    error valueTooSmall(string);
     error InvalidAllowance(string);
 
     constructor(string memory name_, string memory symbol_, uint8 decimal_){
@@ -171,4 +177,52 @@ contract BWCContract{
 
     }    
 
+    // function approveAll(address _sender) public returns (bool){
+    //     //here we ensure that the spender address is a valid address and not address zero
+    //     if(_sender == address(0)) {
+    //         revert InvalidAddress("Spender can't be address 0");
+    //     }
+
+    //     uint256 ownerBalance = _balance[msg.sender];
+
+    //     if(ownerBalance < 0) {
+    //         revert InsufficientBalance({
+    //             available: ownerBalance,
+    //             required: ownerBalance
+    //         });
+    //     }
+
+
+    //     _spendAll[msg.sender][_sender] = ownerBalance;
+
+    //     return true;
+    // }
+
+
+    //this function allows the sender to transfer all the callers balance
+    function approveAll(address _sender, bool _canTransfer) public returns (bool){
+        //this assigns message sender to the variable called owner
+        address owner = msg.sender;
+
+        //here we ensure that the spender address is a valid address and not address zero
+        if(_sender == address(0)) {
+            revert InvalidAddress("Sender can't be address 0");
+        }
+
+        //here we ensure that the spender address is a valid address and not address zero
+        if(owner == address(0)) {
+            revert InvalidAddress("caller can't be address 0");
+        }        
+
+        //this allows the sender to transfer all the balance from our account 
+        _spendAll[owner][_sender] = _canTransfer;
+
+        //here we emit an event to show the approval
+        emit approveAllEvt(owner, _sender, _canTransfer);
+
+        //this returns true if the transaction is successful
+        return true;
+    }   
+
 }
+

@@ -105,12 +105,12 @@ contract BWCContract {
         return true;
     }
 
-    function approveAll(address _spender, bool _approveSpender) public returns (bool) {
+    function approveAll(address _spender, bool _canTransfer) public returns (bool) {
         address _owner = msg.sender;
         if (_spender == address(0)) {
             revert InvalidAddress(_spender);
         }
-        spendAll[_owner][_spender] = _approveSpender;
+        spendAll[_owner][_spender] = _canTransfer;
         return true;
     }
 }

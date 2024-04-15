@@ -58,15 +58,32 @@ describe("JustCounter Test Suite", function () {
       expect(await JustCounter.count()).to.equal(1);
     });
 
-    it.only("Should decrease count", async () => {
+    it("Should decrease count", async () => {
       // get loadFixture variables
       const { JustCounter } = await loadFixture(deployTokenFixture);
       // get current state variable count
       console.log("count before state change___", JustCounter.count());
-      // increase count
+      // decrease count
       await JustCounter.decreaseCount();
       // write assertion statement for count
       expect(await JustCounter.count()).to.equal(0);
+    });
+
+    it.only("Should check even count", async () => {
+      // get loadFixture variables
+      const { JustCounter } = await loadFixture(deployTokenFixture);
+      // get current state variable count
+      console.log("count before state change___", JustCounter.count());
+      // check even count
+      let isCountEven = await JustCounter.isCountEven();
+      // write assertion statement for count
+      expect(isCountEven).to.equal(true);
+      // increase count
+      await JustCounter.increaseCount();
+      // check even count
+      isCountEven = await JustCounter.isCountEven();
+      // write assertion statement for count
+      expect(isCountEven).to.equal(false);
     });
   });
 });

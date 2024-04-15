@@ -48,6 +48,20 @@ describe("JustCounter Test Suite", function () {
 			expect(count2).to.equal(amount);
 		});
 
+
+        it("Should decrease count", async () => {
+			// get loadFixture variables
+			const { JustCounter } = await loadFixture(deployTokenFixture);
+			// Set count to 10 for decrement test
+			await JustCounter.store(10);
+            // get current state variable count
+			let count1 = await JustCounter.count();
+			// decrement count by 1
+			await JustCounter.decreaseCount();
+			let count2 = await JustCounter.count();
+			// write assertion statement for count after decreaseCount txn
+			expect(count2).to.equal(count1 - 1);
+		});
 		
 	});
 });

@@ -9,9 +9,8 @@ pragma solidity >=0.8.2 <0.9.0;
  */
 contract JustCounter {
 
-    uint256 count;
-
-    int256 underCount;
+    uint256 public count;
+    int256 public underCount;
 
     /**
      * @dev Store value in variable

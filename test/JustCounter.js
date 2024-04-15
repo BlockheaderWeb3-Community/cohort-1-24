@@ -62,6 +62,16 @@ describe("JustCounter Test Suite", function () {
 			// write assertion statement for count after decreaseCount txn
 			expect(count2).to.equal(count1 - 1);
 		});
+
+
+        it("Should return true if count is even", async () => {
+			// get loadFixture variables
+			const { JustCounter } = await loadFixture(deployTokenFixture);
+			// Set count to even number
+			await JustCounter.store(4);
+			// write assertion statement to check count is even
+			expect(await JustCounter.isCountEven()).to.equal(true);
+		});
 		
 	});
 });

@@ -72,6 +72,17 @@ describe("JustCounter Test Suite", function () {
 			// write assertion statement to check count is even
 			expect(await JustCounter.isCountEven()).to.equal(true);
 		});
+
+        it("Should return false if count is odd", async () => {
+			// get loadFixture variables
+			const { JustCounter } = await loadFixture(deployTokenFixture);
+			// Set count to odd number
+			await JustCounter.store(3);
+			// write assertion statement to check count is even
+
+			expect(await JustCounter.isCountEven()).to.equal(false);
+		});
+
 		
 	});
 });

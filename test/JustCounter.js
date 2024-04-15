@@ -16,9 +16,8 @@ describe("JustCounter Test Suite", function () {
       expect(await JustCounter.count()).to.equal(0);
       expect(await JustCounter.underCount()).to.equal(0);
     });
-  });
+  
 
-  describe("State Variables Changes", async () => {
     it("Should store number", async () => {
       let amount = 5;
       // get loadFixture variables
@@ -36,7 +35,7 @@ describe("JustCounter Test Suite", function () {
       expect(count2).to.equal(amount);
     });
 
-    it.only("Should retrieve count", async () => {
+    it("Should retrieve count", async () => {
       // get loadFixture variables
       const { JustCounter } = await loadFixture(deployTokenFixture);
       // get current state variable count
@@ -45,16 +44,32 @@ describe("JustCounter Test Suite", function () {
 
       // write assertion statement for count1
       expect(count1).to.equal(0);
-    });
-    });
+     });
 
-     it.only("Should increase count", async () => {
-      // get loadFixture variables
-     const { JustCounter } = await loadFixture(deployTokenFixture);
-     // get current state variable Increasecount
-     await JustCounter.increaseCount();
-     console.log("increase before state change___", JustCounter.count());
-     expect(await JustCounter.count()).to.equal(1);
+    
+     it("Should increase count", async () => {
+        // get loadFixture variables
+       const { JustCounter } = await loadFixture(deployTokenFixture);
+       // get current state variable Increasecount
+       await JustCounter.increaseCount();
+       console.log("increase before state change___", JustCounter.count());
+       expect(await JustCounter.count()).to.equal(+ 1);
+       });
+
+     it("Should decrease count", async () => {
+        // get loadFixture variables
+        const { JustCounter } = await loadFixture(deployTokenFixture);
+        await JustCounter.store(5);
+        let count1 = await JustCounter.count();
+        await JustCounter.decreaseCount();
+        let count2 = await JustCounter.count();
+        expect(count2).to.equal(count1 - 1);
      });
+
      });
+
+     });
+    
+
+
   

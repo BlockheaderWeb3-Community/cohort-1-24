@@ -46,8 +46,15 @@ describe("JustCounter Test Suite", function () {
       // write assertion statement for count1
       expect(count1).to.equal(0);
     });
-  });
+    });
+
+     it.only("Should increase count", async () => {
+      // get loadFixture variables
+     const { JustCounter } = await loadFixture(deployTokenFixture);
+     // get current state variable Increasecount
+     await JustCounter.increaseCount();
+     console.log("increase before state change___", JustCounter.count());
+     expect(await JustCounter.count()).to.equal(1);
+     });
+     });
   
-
-
-});

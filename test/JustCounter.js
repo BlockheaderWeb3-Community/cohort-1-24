@@ -10,7 +10,7 @@ describe("JustCounter Test Suite", function () {
     return { JustCounter, owner, addr1, addr2 };
   };
 
-  describe.only("Post Deployment State Variables", async () => {
+  describe("Post Deployment State Variables", async () => {
     it("Should return state variables", async () => {
       const { JustCounter } = await loadFixture(deployTokenFixture);
       expect(await JustCounter.count()).to.equal(0);

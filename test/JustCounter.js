@@ -49,12 +49,12 @@ describe("JustCounter Test Suite", function () {
 			expect(count2).to.equal(amount);
 		});
 
-        it("Should increase count", async () => {
+		it("Should increase count", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			// Set count to 10 for decrement test
 			await JustCounter.store(4);
-            // get current state variable count
+			// get current state variable count
 			let count1 = await JustCounter.count();
 			// increase count by 1
 			await JustCounter.increaseCount();
@@ -63,14 +63,12 @@ describe("JustCounter Test Suite", function () {
 			expect(count2).to.equal(5);
 		});
 
-
-
-        it("Should decrease count", async () => {
+		it("Should decrease count", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			// Set count to 10 for decrement test
 			await JustCounter.store(10);
-            // get current state variable count
+			// get current state variable count
 			let count1 = await JustCounter.count();
 			// decrement count by 1
 			await JustCounter.decreaseCount();
@@ -79,27 +77,22 @@ describe("JustCounter Test Suite", function () {
 			expect(count2).to.equal(count1 - 1);
 		});
 
-
-        it("Should return true if count is even", async () => {
+		it("Should return appropriate boolean value if count is even or odd", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			// Set count to even number
 			await JustCounter.store(4);
 			// write assertion statement to check count is even
 			expect(await JustCounter.isCountEven()).to.equal(true);
-		});
-
-        it("Should return false if count is odd", async () => {
-			// get loadFixture variables
-			const { JustCounter } = await loadFixture(deployTokenFixture);
 			// Set count to odd number
-			await JustCounter.store(3);
-			// write assertion statement to check count is even
-
+			await JustCounter.store(7);
+			// write assertion statement to check count is odd
 			expect(await JustCounter.isCountEven()).to.equal(false);
 		});
-        
-        it("Should increase underCount", async () => {
+
+		
+
+		it("Should increase underCount", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			// get current state variable underCount
@@ -109,8 +102,7 @@ describe("JustCounter Test Suite", function () {
 			expect(underCount2).to.equal(underCount1 + 1);
 		});
 
-
-        it("Should decrease underCount", async () => {
+		it("Should decrease underCount", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			let underCount1 = await JustCounter.underCount();
@@ -119,8 +111,7 @@ describe("JustCounter Test Suite", function () {
 			expect(underCount2).to.equal(underCount1 - 1);
 		});
 
-
-        it("Should return underCount value", async () => {
+		it("Should return underCount value", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			// Increase underCount
@@ -128,9 +119,5 @@ describe("JustCounter Test Suite", function () {
 			// Increment underCount once
 			expect(await JustCounter.getUnderCount()).to.equal(1);
 		});
-
-
-
-		
 	});
 });

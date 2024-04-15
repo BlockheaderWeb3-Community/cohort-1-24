@@ -57,22 +57,22 @@ describe("JustCounter Test Suite", function () {
       // get loadFixture variables
       const { JustCounter } = await loadFixture(deployTokenFixture);
       // get current state variable count
+      JustCounter.store(10);
       let count1 = await JustCounter.count();
       console.log("count before state change___", count1);
       //write assertion statement for count1
-      expect(count1).to.equal(0);
+      expect(count1).to.equal(10);
 
       // decrease count (transaction)
       await JustCounter.decreaseCount();
       let count2 = await JustCounter.count();
 
       // write assertion statement for count after decreaseCount txn
-      expect(count2).to.equal((count1 += 1));
+      expect(count2).to.equal(count1 - 1);
     });
     it("Should increase UnderCount", async () => {
       // get loadFixture variables
       const { JustCounter } = await loadFixture(deployTokenFixture);
-      await JustCounter.store(-10);
       // get current state variable count
       let count1 = await JustCounter.underCount();
       console.log("count before state change___", count1);
@@ -84,25 +84,25 @@ describe("JustCounter Test Suite", function () {
       let count2 = await JustCounter.underCount();
 
       // write assertion statement for count after increaseCount txn
-      expect(count2).to.equal((count1 += 1));
+      expect(count2).to.equal(count1 + 1);
     });
 
     it("Should decrease underCount", async () => {
       // get loadFixture variables
       const { JustCounter } = await loadFixture(deployTokenFixture);
-      await JustCounter.store(-10);
       // get current state variable count
       let count1 = await JustCounter.underCount();
-      console.log("count before state change___", count1);
+      console.log("underCount before state change___", count1);
       //write assertion statement for count1
       expect(count1).to.equal(0);
 
       // decrease count (transaction)
-      await JustCounter.decreaseCount();
+      await JustCounter.decreaseUnderCount();
       let count2 = await JustCounter.underCount();
+      console.log(count2);
 
       // write assertion statement for count after decreaseCount txn
-      expect(count2).to.equal((count1 += 1));
+      expect(count2).to.equal(count1 - 1);
     });
   });
 
@@ -110,7 +110,7 @@ describe("JustCounter Test Suite", function () {
     it("Should return a bool", async () => {
       const { JustCounter } = await loadFixture(deployTokenFixture);
       await JustCounter.store(10);
-      const countIsEven = JustCounter.isCountEven();
+      const countIsEven = await JustCounter.isCountEven();
       expect(countIsEven).to.equal(true);
     });
   });

@@ -64,6 +64,7 @@ describe("JustCounter Test Suite", function () {
         let count1 = await JustCounter.count();
         await JustCounter.decreaseCount();
         let count2 = await JustCounter.count();
+        console.log(" decrease count before state change___", count1);
         expect(count2).to.equal(count1 - 1);
      });
      it("Should increase underCount", async () => {
@@ -72,6 +73,7 @@ describe("JustCounter Test Suite", function () {
         let underCount1 = await JustCounter.underCount();
         await JustCounter.increaseUnderCount();
         let underCount2 = await JustCounter.underCount();
+        console.log("increase undercount before state change___");
         expect(underCount2).to.equal(underCount1 + 1);
     });
     it("Should decrease underCount", async () => {
@@ -81,8 +83,17 @@ describe("JustCounter Test Suite", function () {
         let underCount1 = await JustCounter.underCount();
         await JustCounter.decreaseUnderCount();
         let underCount2 = await JustCounter.underCount();
+        console.log("decrease undercount before state change___"  );
         expect(underCount2).to.equal(underCount1 - 1);
     });
+    it.only("Should return underCount value", async () => {
+        // get loadFixture variables
+        const { JustCounter } = await loadFixture(deployTokenFixture);
+        await JustCounter.increaseUnderCount();
+        console.log("return undercount value before state change___");
+        expect(await JustCounter.getUnderCount()).to.equal(1);
+    });
+
 
      });
 

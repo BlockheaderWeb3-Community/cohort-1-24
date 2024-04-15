@@ -86,7 +86,7 @@ describe("JustCounter Test Suite", function () {
         console.log("decrease undercount before state change___"  );
         expect(underCount2).to.equal(underCount1 - 1);
     });
-    it.only("Should return underCount value", async () => {
+    it("Should return underCount value", async () => {
         // get loadFixture variables
         const { JustCounter } = await loadFixture(deployTokenFixture);
         await JustCounter.increaseUnderCount();

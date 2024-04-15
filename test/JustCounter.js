@@ -94,6 +94,17 @@ describe("JustCounter Test Suite", function () {
 		});
 
 
+        it("Should decrease underCount", async () => {
+			// get loadFixture variables
+			const { JustCounter } = await loadFixture(deployTokenFixture);
+			let underCount1 = await JustCounter.underCount();
+			await JustCounter.decreaseUnderCount();
+			let underCount2 = await JustCounter.underCount();
+			expect(underCount2).to.equal(underCount1 - 1);
+		});
+
+
+
 
 		
 	});

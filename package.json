@@ -3,13 +3,11 @@
   "scripts": {
     "test": "npx hardhat test",
     "format": "prettier --write \"test/**/*.js\" "
-
-
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
-    "hardhat": "^2.21.0",
+    "hardhat": "^2.22.3",
     "prettier": "3.2.5"
   }
 }

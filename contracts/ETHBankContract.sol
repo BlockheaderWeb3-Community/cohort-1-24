@@ -9,7 +9,7 @@ import "hardhat/console.sol";
  */
 
 contract ETHBankContract {
-    address owner;
+    address public owner;
     mapping(address => uint256) public ethBalances;
 
     event Deposit(address _address, uint256 _amount, uint256 _prevBalance, uint256 _currentBalance);

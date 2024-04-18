@@ -1,0 +1,73 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "StudentLogs",
+  "sourceName": "contracts/StudentRegistryLogs.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "studentAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "studentId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "age",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isActive",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isPunctual",
+          "type": "bool"
+        }
+      ],
+      "name": "StudentAction",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "studentAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "studentId",
+          "type": "uint256"
+        }
+      ],
+      "name": "StudentDeleted",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212201983cb50456f2f3430a07b6a2d5f0be5574906ce33adfac353ac9014792ff15e64736f6c63430008120033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212201983cb50456f2f3430a07b6a2d5f0be5574906ce33adfac353ac9014792ff15e64736f6c63430008120033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

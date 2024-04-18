@@ -25,7 +25,6 @@ describe("JustCounter Test Suite", function () {
       const { JustCounter } = await loadFixture(deployTokenFixture);
       // get current state variable count
       let count1 = await JustCounter.count();
-      console.log("count before state change___", count1);
       // write assertion statement for count1
       expect(count1).to.equal(0);
 
@@ -41,7 +40,6 @@ describe("JustCounter Test Suite", function () {
       const { JustCounter } = await loadFixture(deployTokenFixture);
       // get current state variable count
       let count1 = await JustCounter.count();
-      console.log("count before state change___", count1);
       //write assertion statement for count1
       expect(count1).to.equal(0);
 
@@ -59,7 +57,6 @@ describe("JustCounter Test Suite", function () {
       // get current state variable count
       await JustCounter.store(10);
       let count1 = await JustCounter.count();
-      console.log("count before state change___", count1);
       //write assertion statement for count1
       expect(count1).to.equal(10);
 
@@ -75,7 +72,6 @@ describe("JustCounter Test Suite", function () {
       const { JustCounter } = await loadFixture(deployTokenFixture);
       // get current state variable underCount
       let count1 = await JustCounter.underCount();
-      console.log("count before state change___", count1);
       //write assertion statement for count1
       expect(count1).to.equal(0);
 
@@ -92,14 +88,12 @@ describe("JustCounter Test Suite", function () {
       const { JustCounter } = await loadFixture(deployTokenFixture);
       // get current state variable underCount
       let count1 = await JustCounter.underCount();
-      console.log("underCount before state change___", count1);
       //write assertion statement for count1
       expect(count1).to.equal(0);
 
       // decrease UnderCount (transaction)
       await JustCounter.decreaseUnderCount();
       let count2 = await JustCounter.underCount();
-      console.log(count2);
 
       // write assertion statement for count after decreaseCount txn
       expect(count2).to.equal(-1);

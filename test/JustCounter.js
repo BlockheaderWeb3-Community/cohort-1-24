@@ -10,20 +10,25 @@ describe("JustCounter Test Suite", function () {
 		return { JustCounter, owner, addr1, addr2 };
 	};
 
+	
 	describe("Post Deployment State Variables", async () => {
-		let amount = 5;
 		it("Should return state variables", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			expect(await JustCounter.count()).to.equal(0);
 			expect(await JustCounter.underCount()).to.equal(0);
 		});
+		
+	});
+
+	describe("Transactions", async () => {
+		let amount = 5;
+		
 
 		it("Should store number", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
 			let count1 = await JustCounter.count();
-			console.log("count before state change___", count1);
 			// write assertion statement for count1
 			expect(count1).to.equal(0);
 
@@ -90,11 +95,11 @@ describe("JustCounter Test Suite", function () {
 			expect(await JustCounter.isCountEven()).to.equal(false);
 		});
 
-		
-
 		it("Should increase underCount", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
+			// assert that default underCount value is 0
+			expect(await JustCounter.underCount()).to.equal(0);
 			// get current state variable underCount
 			let underCount1 = await JustCounter.underCount();
 			await JustCounter.increaseUnderCount();
@@ -105,6 +110,8 @@ describe("JustCounter Test Suite", function () {
 		it("Should decrease underCount", async () => {
 			// get loadFixture variables
 			const { JustCounter } = await loadFixture(deployTokenFixture);
+			// assert that default underCount value is 0
+			expect(await JustCounter.underCount()).to.equal(0);
 			let underCount1 = await JustCounter.underCount();
 			await JustCounter.decreaseUnderCount();
 			let underCount2 = await JustCounter.underCount();

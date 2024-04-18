@@ -15,11 +15,7 @@ describe("ETHBank Test Suite", function () {
         // extract loadFixture variables
       const { ETHBankContract, owner, addr1, addr2 } = await loadFixture(deployTokenFixture);
       expect(await ETHBankContract.owner()).to.eq(owner.address)
-      
-    
-
-
-    
+      expect(await ETHBankContract.ethBalances(owner.address)).to.eq(0)
     });
   });
 

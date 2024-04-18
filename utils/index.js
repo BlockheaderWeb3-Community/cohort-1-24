@@ -1,9 +1,13 @@
 // define loadFixture
 // fixtures can return anything you consider useful for your tests
-async function deployTokenFixture(contractName) {
+
+const { ethers } = require("hardhat")
+async function deployContractFixture(contractName) {
     const ContractInstance = await ethers.deployContract(contractName);
+
+    console.log("cont")
     return { ContractInstance };
 };
 
 
-module.exports = { deployTokenFixture }
+module.exports = { deployContractFixture }

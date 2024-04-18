@@ -73,7 +73,7 @@ describe("JustCounter Test Suite", function () {
     it("Should increase UnderCount", async () => {
       // get loadFixture variables
       const { JustCounter } = await loadFixture(deployTokenFixture);
-      // get current state variable count
+      // get current state variable underCount
       let count1 = await JustCounter.underCount();
       console.log("count before state change___", count1);
       //write assertion statement for count1
@@ -90,13 +90,13 @@ describe("JustCounter Test Suite", function () {
     it("Should decrease underCount", async () => {
       // get loadFixture variables
       const { JustCounter } = await loadFixture(deployTokenFixture);
-      // get current state variable count
+      // get current state variable underCount
       let count1 = await JustCounter.underCount();
       console.log("underCount before state change___", count1);
       //write assertion statement for count1
       expect(count1).to.equal(0);
 
-      // decrease count (transaction)
+      // decrease UnderCount (transaction)
       await JustCounter.decreaseUnderCount();
       let count2 = await JustCounter.underCount();
       console.log(count2);

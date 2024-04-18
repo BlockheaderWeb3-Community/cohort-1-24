@@ -1,0 +1,49 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "SimpleCounterLogs",
+  "sourceName": "contracts/SimpleCounterLogs.sol",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "int256",
+          "name": "count",
+          "type": "int256"
+        }
+      ],
+      "name": "underCountAlteration",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "count",
+          "type": "uint256"
+        }
+      ],
+      "name": "valueAlteration",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212207c329dcd75a53e9a02025213861a79c94fcbad391ec7737a5a373c542546edef64736f6c63430008120033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212207c329dcd75a53e9a02025213861a79c94fcbad391ec7737a5a373c542546edef64736f6c63430008120033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

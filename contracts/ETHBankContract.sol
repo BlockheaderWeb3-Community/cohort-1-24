@@ -28,7 +28,6 @@ contract ETHBankContract {
         require(ethAmount != 0, "you must add ETH");
         ethBalances[msg.sender] += ethAmount;
         (bool success, ) = address(this).call{value: ethAmount}("");
-        console.log("txn success here:____", success);
         require(success, "failed to deposit ETH");
         emit Deposit(msg.sender, ethAmount, balanceBefore, ethBalances[msg.sender]);
     }

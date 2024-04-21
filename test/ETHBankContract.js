@@ -59,7 +59,19 @@ describe.only("ETHBank Test Suite", function () {
       // await provider.getBalance(user1.address);
       const addr1ETHBalanceAfterDeposit = await getBalance(addr1.address);
       // assert that addr1ETHBalanceAfterDeposit is equal to depositAmount - gasUsed
-      // expect(formatEther(addr1ETHBalanceAfterDeposit)).to.eq(addr1BalanceBefore - (depositAmount + gasUsed));
+
+      const addr1BalanceBeforePlusGasUsed = addr1BalanceBefore  + (addr1ETHBalanceAfterDeposit + formatEther(gasUsed));
+
+
+      console.log("__addr1BalanceBefore__", formatEther(addr1BalanceBefore));
+      console.log("__addr1ETHBalanceAfterDeposit__", formatEther(addr1ETHBalanceAfterDeposit));
+      console.log("__addr1BalanceBeforePlusGasUsed__", addr1BalanceBeforePlusGasUsed);
+      console.log("__gasUsed__", formatEther(gasUsed));
+
+
+      expect(formatEther(addr1BalanceBefore)).to.eq(addr1BalanceBeforePlusGasUsed);
+
+      return;
       //Get contract balance after deposit
       const ethContractBalance = await getBalance(ETHBankContract.address);
       // assert that ethContractBalance is equal to depositAmount
